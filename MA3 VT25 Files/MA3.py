@@ -43,21 +43,15 @@ def approximate_pi(n): # Ex1
 
 def sphere_volume(n, d): #Ex2, approximation
     insideCount = 0
-    outsideCount = 0
-    
-    for i in range(0, n):
-        
+    for i in range(0, n): 
         s = 0
-        
         coords = [random.uniform(-1, 1) for _ in range(0, d)]
         for c in coords:
             s += c**2
-            
         if s < 1:
             insideCount += 1
         
     result = (insideCount/n) * 2**d
-    print(result)
     return result
 
 def hypersphere_exact(d): #Ex2, real value    
@@ -77,52 +71,33 @@ def sphere_volume_parallel1(n,d,np):
     
 
 #Ex4: parallel code - parallelize actual computations by splitting data
-def sphere_volume_parallel2(n,d,np=2):
+def sphere_volume_parallel2(n,d, np=2):
         #n is the number of points
         # d is the number of dimensions of the sphere
-        #np is the number of processes
-        
-        
-        
-        
-        """with future.ProcessPoolExecutor() as ex:
-            _n = [n for _ in range(0, np)]
+        #np is the number of processes 
+        with future.ProcessPoolExecutor() as ex:
+            _n = [n//np for _ in range(0, np)]
             _d = [d for _ in range(0, np)]
-            result = ex.map(one_sphere_parallell, _n, _d)
-            print(result)
-            return sum(list(result))/np"""
-        
-        resultLst = []
-        
-        for i in range(0, np):
-            resultLst.append(one_sphere_parallell(n, d))
-         
-        #print(resultLst)
-        return(sum(resultLst)/np)
-        
-def one_sphere_parallell(n, d):
-    with future.ProcessPoolExecutor() as ex:
-        _d = [d for _ in range(0, n)]
-        result = ex.map(check_rnd_point_inside, _d)
-        result = list(result)
-        print(type(result))
-        print(len(list(result)))
-        print(sum(list(result)))
-        return (sum(list(result))/len(list(result))) * (2**d)    
+            total = 0
+            result = ex.map(check_rnd_points_inside, _n, _d)
+            result = list(result)
+            total += sum(result)
+            return (total/n) * (2**d)
     
-def check_rnd_point_inside(d):
-    s = 0
-    coords = [random.uniform(-1, 1) for _ in range(0, d)]
-    for c in coords:
-        s += c**2  
-    if s < 1:
-        return 1
-    else:
-        return 0    
-    
+def check_rnd_points_inside(n, d):  
+    total = 0
+    for _ in range(0, n):
+        s = 0
+        coords = [random.uniform(-1, 1) for _ in range(0, d)]
+        for c in coords:
+            s += c**2  
+        if s < 1:
+            total += 1    
+    return total
+       
 def main():
     #Ex1
-    """ dots = [1000, 10000, 100000]
+    dots = [1000, 10000, 100000]
     for n in dots:
         approximate_pi(n)
     #Ex2
@@ -144,7 +119,7 @@ def main():
         sphere_volume(n,d)
     stop = pc()
     print(f"Ex3: Sequential time of {d} and {n}: {stop-start}")
-    print("What is parallel time?")"""
+    print("What is parallel time?")
 
     #Ex4
     n = 1000000
