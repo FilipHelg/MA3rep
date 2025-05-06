@@ -120,6 +120,12 @@ def main():
     stop = pc()
     print(f"Ex3: Sequential time of {d} and {n}: {stop-start}")
     print("What is parallel time?")
+    
+    start = pc()
+    print(sphere_volume_parallel1(n, d, 10))
+    stop = pc()
+    
+    print(f"Ex4: Parallel time of {d} and {n}: {stop-start}")
 
     #Ex4
     n = 1000000
@@ -130,7 +136,11 @@ def main():
     print(f"Ex4: Sequential time of {d} and {n}: {stop-start}")
     print("What is parallel time?")
 
+    start = pc()
     print(sphere_volume_parallel2(n, d))
+    stop = pc()
+    
+    print(f"Ex4: Parallel time of {d} and {n}: {stop-start}")
     
     
 
